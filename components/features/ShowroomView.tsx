@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 /* ---------- 型定義 ---------- */
 interface Product {
@@ -761,9 +762,17 @@ export function ShowroomView({ visible, onScrollToPhilosophy }: ShowroomViewProp
 
         {/* 下部 */}
         <div className="relative z-10 flex shrink-0 items-center justify-between px-8 pb-6 md:px-12">
-          <p className="text-[10px] text-gm-text-muted/20">
-            &copy; 2026 GalaxyMind
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-[10px] text-gm-text-muted/20">
+              &copy; 2026 GalaxyMind
+            </p>
+            <Link
+              href="/portfolio"
+              className="text-[10px] tracking-widest text-gm-text-muted/30 transition-colors hover:text-gm-indigo/60"
+            >
+              Portfolio
+            </Link>
+          </div>
 
           {/* 下スクロールヒント */}
           <motion.div
