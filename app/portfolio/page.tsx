@@ -1,10 +1,9 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef as useRefHook } from "react";
 
 function FadeInWhenVisible({
   children,
@@ -51,9 +50,9 @@ const projects = [
   },
   {
     name: "OpenClaw 運用",
-    description: "AIアシスタントの業務規程策定と運用。",
-    role: "設計・管理",
-    status: "運用中",
+    description: "失敗・難しすぎる",
+    role: "設計・運用",
+    status: "中止",
   },
 ];
 
@@ -63,7 +62,10 @@ const links = [
 
 function HeroSection() {
   return (
-    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:flex-row md:gap-16 md:px-20">
+    <section
+      className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:flex-row md:gap-16 md:px-20"
+      style={{ scrollSnapAlign: "start" }}
+    >
       <FadeInWhenVisible>
         <div className="flex-shrink-0">
           <div className="relative h-72 w-72 border border-white/10">
@@ -103,7 +105,10 @@ function HeroSection() {
 
 function AboutSection() {
   return (
-    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
+    <section
+      className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20"
+      style={{ scrollSnapAlign: "start" }}
+    >
       <FadeInWhenVisible>
         <p className="mb-8 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           About
@@ -123,7 +128,10 @@ function AboutSection() {
 
 function InterestsSection() {
   return (
-    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
+    <section
+      className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20"
+      style={{ scrollSnapAlign: "start" }}
+    >
       <FadeInWhenVisible>
         <p className="mb-10 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           Interests
@@ -157,7 +165,10 @@ function InterestsSection() {
 
 function ProjectsSection() {
   return (
-    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
+    <section
+      className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20"
+      style={{ scrollSnapAlign: "start" }}
+    >
       <FadeInWhenVisible>
         <p className="mb-10 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           Projects
@@ -194,7 +205,10 @@ function ProjectsSection() {
 
 function LinksSection() {
   return (
-    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
+    <section
+      className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20"
+      style={{ scrollSnapAlign: "start" }}
+    >
       <FadeInWhenVisible>
         <p className="mb-10 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           Links
@@ -261,8 +275,10 @@ export default function PortfolioPage() {
     const container = containerRef.current;
     if (!container) return;
     const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      container.scrollLeft += e.deltaY + e.deltaX;
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
+      }
     };
     container.addEventListener("wheel", onWheel, { passive: false });
     return () => container.removeEventListener("wheel", onWheel);
@@ -278,7 +294,11 @@ export default function PortfolioPage() {
       <div
         ref={containerRef}
         className="relative z-10 flex h-full overflow-x-scroll"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          scrollSnapType: "x mandatory",
+        }}
       >
         <HeroSection />
         <AboutSection />
