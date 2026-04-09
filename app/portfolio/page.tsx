@@ -33,7 +33,7 @@ const profile = {
   nameJa: "岩井 亨",
   role: "管理人 / Founder",
   affiliation: "金沢大学 経済学類",
-  bio: "経済学・経営学を学びながら、図書館情報学・教育学・AI・にも関心を持つ。　　　　　　　GalaxyMindは「模索するすべてのひと」に向けた理念駆動型プラットフォーム。",
+  bio: "経済学・経営学を学びながら、図書館情報学・教育学・AI・にも関心を持つ。\nGalaxyMindは「模索するすべてのひと」に向けた理念駆動型プラットフォーム。",
 };
 
 const interests = [
@@ -108,7 +108,7 @@ function AboutSection() {
 
       <FadeInWhenVisible delay={0.2}>
         <div className="mx-auto max-w-2xl">
-          <p className="text-center text-[14px] leading-[2.2] text-gm-text-muted/70">
+          <p className="whitespace-pre-line text-center text-[14px] leading-[2.2] text-gm-text-muted/70">
             {profile.bio}
           </p>
         </div>
