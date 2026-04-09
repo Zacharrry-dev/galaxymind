@@ -4,6 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect, useRef as useRefHook } from "react";
 
 function FadeInWhenVisible({
   children,
@@ -18,8 +19,8 @@ function FadeInWhenVisible({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      initial={{ opacity: 0, x: 20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 20 }}
       transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
@@ -62,7 +63,7 @@ const links = [
 
 function HeroSection() {
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center px-8 pt-20 md:flex-row md:items-center md:gap-16 md:px-20">
+    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:flex-row md:gap-16 md:px-20">
       <FadeInWhenVisible>
         <div className="flex-shrink-0">
           <div className="relative h-72 w-72 border border-white/10">
@@ -102,7 +103,7 @@ function HeroSection() {
 
 function AboutSection() {
   return (
-    <section className="px-8 py-16 md:px-12">
+    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
       <FadeInWhenVisible>
         <p className="mb-8 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           About
@@ -122,7 +123,7 @@ function AboutSection() {
 
 function InterestsSection() {
   return (
-    <section className="px-8 py-16 md:px-12">
+    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
       <FadeInWhenVisible>
         <p className="mb-10 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           Interests
@@ -156,14 +157,14 @@ function InterestsSection() {
 
 function ProjectsSection() {
   return (
-    <section className="px-8 py-16 md:px-12">
+    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
       <FadeInWhenVisible>
         <p className="mb-10 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           Projects
         </p>
       </FadeInWhenVisible>
 
-      <div className="mx-auto flex max-w-3xl flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
         {projects.map((project, i) => (
           <FadeInWhenVisible key={project.name} delay={0.15 * i}>
             <div className="rounded-[1.8rem] border border-white/[0.06] bg-gm-surface/60 px-6 py-6 md:px-8">
@@ -193,7 +194,7 @@ function ProjectsSection() {
 
 function LinksSection() {
   return (
-    <section className="px-8 py-16 md:px-12">
+    <section className="flex h-screen w-screen flex-shrink-0 flex-col items-center justify-center px-8 md:px-20">
       <FadeInWhenVisible>
         <p className="mb-10 text-center text-[10px] uppercase tracking-[0.5em] text-gm-text-muted/30">
           Links
@@ -220,15 +221,9 @@ function LinksSection() {
           ))}
         </div>
       </FadeInWhenVisible>
-    </section>
-  );
-}
 
-function BackSection() {
-  return (
-    <section className="px-8 py-16 md:px-12">
-      <FadeInWhenVisible>
-        <div className="text-center">
+      <FadeInWhenVisible delay={0.4}>
+        <div className="mt-16 text-center">
           <Link
             href="/"
             className="group inline-flex items-center gap-3 rounded-full border border-white/[0.08] bg-gm-surface/60 px-8 py-4 text-sm tracking-wider text-gm-text-muted/60 transition-all duration-300 hover:border-white/[0.15] hover:text-gm-text/80"
@@ -250,33 +245,46 @@ function BackSection() {
             </svg>
             <span>Back to GalaxyMind</span>
           </Link>
+          <p className="mt-8 text-[10px] text-gm-text-muted/20">
+            &copy; 2026 GalaxyMind
+          </p>
         </div>
-      </FadeInWhenVisible>
-
-      <FadeInWhenVisible delay={0.3}>
-        <p className="mt-12 text-center text-[10px] text-gm-text-muted/20">
-          &copy; 2026 GalaxyMind
-        </p>
       </FadeInWhenVisible>
     </section>
   );
 }
 
 export default function PortfolioPage() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      container.scrollLeft += e.deltaY + e.deltaX;
+    };
+    container.addEventListener("wheel", onWheel, { passive: false });
+    return () => container.removeEventListener("wheel", onWheel);
+  }, []);
+
   return (
-    <main className="min-h-screen overflow-y-scroll bg-gm-bg">
+    <main className="h-screen overflow-hidden bg-gm-bg">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -right-[10vw] top-[10vh] h-[40vh] w-[40vh] rounded-full bg-gm-indigo/[0.02] blur-[120px]" />
         <div className="absolute -left-[5vw] bottom-[20vh] h-[35vh] w-[35vh] rounded-full bg-gm-rose/[0.02] blur-[100px]" />
       </div>
 
-      <div className="relative z-10">
+      <div
+        ref={containerRef}
+        className="relative z-10 flex h-full overflow-x-scroll"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
         <HeroSection />
         <AboutSection />
         <InterestsSection />
         <ProjectsSection />
         <LinksSection />
-        <BackSection />
       </div>
     </main>
   );
